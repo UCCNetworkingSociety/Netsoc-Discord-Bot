@@ -12,7 +12,12 @@ import (
 func IsAllowed(ctx context.Context, s *discordgo.Session, authorID string, permissionKey string) bool {
 	l, loggerOk := logging.FromContext(ctx)
 	conf := config.GetConfig()
-	member, _ := s.GuildMember(conf.GuildID, authorID)
+	member, err := s.GuildMember(conf.GuildID, authorID)
+
+	if err != nil && loggerOk {
+		l.Infof("Failed to retrieve Member info. Error: %q", err)
+	}
+
 	// Check the user has a role defined in the config for this command
 	isAllowed := false
 	for _, role := range member.Roles {
