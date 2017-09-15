@@ -10,12 +10,7 @@ import (
 )
 
 // commMap maps the name of a command to the function which executes the command
-var commMap = map[string]*command{
-	"ping": &command{
-		help: "Responds 'Pong!' to and 'ping'",
-		exec: pingCommand,
-	},
-}
+var commMap map[string]*command
 
 // HelpCommand is the name of the command which lists the commands available
 // and can give information about a specific command.
@@ -26,6 +21,19 @@ const HelpCommand = "help"
 type command struct {
 	help string
 	exec func(context.Context, *discordgo.Session, *discordgo.MessageCreate, []string) error
+}
+
+func init() {
+	commMap = map[string]*command{
+		"ping": &command{
+			help: "Responds 'Pong!' to and 'ping'.",
+			exec: pingCommand,
+		},
+		"setShortcut": &command{
+			help: "Sets a shortcut command. Usage: !set keyword url_link_to_resource",
+			exec: setShortcutCommand,
+		},
+	}
 }
 
 // pingCommand is a basic command which will responds "Pong!" to any ping.
