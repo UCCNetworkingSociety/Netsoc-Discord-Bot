@@ -11,7 +11,7 @@ var (
 	conf *Config
 )
 
-// config represetns the bot configuration loaded from the JSON
+// Config represetns the bot configuration loaded from the JSON
 // file "./config.json".
 type Config struct {
 	// Prefix is the string that will prefix all commands
@@ -35,11 +35,13 @@ type Config struct {
 	Permissions Permissions `json:"permissions"`
 }
 
+// Permissions represents the names of the roles allowed
+// to execute the corresponding command
 type Permissions struct {
 	Set []string `json:"set"`
 }
 
-// loadConfig loads the configuration information found in ./config.json
+// LoadConfig loads the configuration information found in ./config.json
 func LoadConfig() error {
 	file, err := ioutil.ReadFile("config.json")
 	if err != nil {
@@ -58,6 +60,7 @@ func LoadConfig() error {
 	return nil
 }
 
+// GetConfig gets the loaded configuration
 func GetConfig() *Config {
 	return conf
 }
