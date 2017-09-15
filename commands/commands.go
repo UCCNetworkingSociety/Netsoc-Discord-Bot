@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/UCCNetworkingSociety/Netsoc-Discord-Bot/config"
 	"github.com/UCCNetworkingSociety/Netsoc-Discord-Bot/logging"
 	"github.com/bwmarrin/discordgo"
 )
@@ -43,6 +44,55 @@ func pingCommand(ctx context.Context, s *discordgo.Session, m *discordgo.Message
 	if ok {
 		l.Infof("Responding 'Pong!' to ping command")
 	}
+	return nil
+}
+
+// setShortcutCommand sets string => string shortcut that can be called later to print a value
+func setShortcutCommand(ctx context.Context, s *discordgo.Session, m *discordgo.MessageCreate, c []string) error {
+	l, ok := logging.FromContext(ctx)
+	conf := config.GetConfig()
+
+	if len(c) < 3 {
+		s.ChannelMessageSend(m.ChannelID, "Too few arguments supplied. Refer to !help for usage.")
+		return fmt.Errorf("Too few arguments supplied for set command")
+	} else if len(c) > 3 {
+		s.ChannelMessageSend(m.ChannelID, "Too many arguments supplied. Refer to !help for usage.")
+		return fmt.Errorf("Too many arguments supplied for set command")
+	}
+
+	member, _ := s.GuildMember(conf.GuildID, m.Author.ID)
+	// Check the user has a role defined in the config for this command
+	isAllowed := false
+	for _, role := range member.Roles {
+		state := s.State
+
+		roleInfo, err := state.Role(conf.GuildID, role)
+		if err != nil {
+			return fmt.Errorf("failed to retrieve role information: %s", err)
+		}
+
+		if stringInSlice(roleInfo.Name, conf.Permissions.Set) {
+			isAllowed = true
+			break
+		}
+	}
+
+	if isAllowed {
+		commMap[c[1]] = &command{
+			help: c[2],
+			exec: printShortcut,
+		}
+
+		if ok {
+			l.Infof("%q is setting a shortcut for [%q] => [%q]", m.Author, c[1], c[2])
+		}
+	} else {
+		s.ChannelMessageSend(m.ChannelID, "You do not have permissions to use this command.")
+		if ok {
+			l.Infof("%q is not allowed to execute the set command", m.Author)
+		}
+	}
+
 	return nil
 }
 
@@ -85,4 +135,20 @@ func Execute(ctx context.Context, s *discordgo.Session, m *discordgo.MessageCrea
 		return nil
 	}
 	return fmt.Errorf("Failed to recognise the command %q", args[0])
+}
+
+// stringInSlice searches for a given value in a flat slice
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
+
+// printShortcut uses the help text of the command to print the shortcut's value
+func printShortcut(ctx context.Context, s *discordgo.Session, m *discordgo.MessageCreate, args []string) error {
+	s.ChannelMessageSend(m.ChannelID, commMap[args[0]].help)
+	return nil
 }
