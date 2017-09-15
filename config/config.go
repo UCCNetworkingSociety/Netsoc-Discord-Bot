@@ -26,19 +26,14 @@ type Config struct {
 	// over the internet. This is used by netsocadmin to reach the
 	// '/help' endpoint.
 	BotHostName string `json:"botHostName"`
-	// SysAdminTag is the tag which, when included in a disocrd message,
+	// SysAdminTag is the tag which, when included in a discord message,
 	// will result in a notification being sent to all SysAdmins so they
 	// can be notified of the help message.
 	GuildID     string `json:"guildID"`
 	SysAdminTag string `json:"sysAdminTag"`
 
-	Permissions Permissions `json:"permissions"`
-}
-
-// Permissions represents the names of the roles allowed
-// to execute the corresponding command
-type Permissions struct {
-	Set []string `json:"set"`
+	// Defines which roles can execute commands (if applicable)
+	Permissions map[string][]string `json:"permissions"`
 }
 
 // LoadConfig loads the configuration information found in ./config.json
