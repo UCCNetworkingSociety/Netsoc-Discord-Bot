@@ -11,10 +11,13 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// commMap maps the name of a command to the function which executes the command
-var commMap map[string]*command
+var (
+	// commMap maps the name of a command to the function which executes the command
+	commMap map[string]*command
 
-var savedAliases = map[string]string{}
+	// savedAliases stores all shortcut alias commands
+	savedAliases = map[string]string{}
+)
 
 // HelpCommand is the name of the command which lists the commands available
 // and can give information about a specific command.
