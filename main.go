@@ -114,6 +114,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+// WatchConfig monitors for changes in the config JSON file and reloads the
+// config values if there is
 func watchConfig(l *logging.Logger) {
 	// creates a new file watcher
 	watcher, err := fsnotify.NewWatcher()
@@ -122,10 +124,8 @@ func watchConfig(l *logging.Logger) {
 	}
 	defer watcher.Close()
 
-	//
 	done := make(chan bool)
 
-	//
 	go func() {
 		for {
 			select {
