@@ -8,18 +8,26 @@ import co.netsoc.netsocbot.commands.registerDMs
 import com.jessecorbett.diskord.util.*
 import co.netsoc.netsocbot.utils.isDM
 import java.net.UnknownHostException
+import java.io.File
 
 val BOT_TOKEN: String = System.getenv("NETSOCBOT_TOKEN")
 val PREFIX = System.getenv("NETSOCBOT_PREFIX") ?: "!"
 val ROLEIDS = (System.getenv("NETSOCBOT_ROLEIDS") ?: "").split(",")
 
+
 suspend fun setup() {
-    val environmentVariables = arrayOf("NETSOCBOT_TOKEN", "NETSOCBOT_ROLEIDS", "NETSOCBOT_SENDGRID_TOKEN")
+    val environmentVariables = arrayOf("NETSOCBOT_TOKEN")
     for (variable in environmentVariables) {
+        println(variable)
         if (System.getenv(variable) == null) {
             println("$variable not set\nExiting")
             exitProcess(1)
         }
+    }
+    var fileObject = File("brownieLeaderboard.txt")
+    if (!fileObject.exists()){
+        println("NO FILEEEEEEEE")
+        fileObject.createNewFile()
     }
 
 }
