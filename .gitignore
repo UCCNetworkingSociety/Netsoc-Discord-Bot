@@ -1,5 +1,10 @@
 # Ignore Gradle project-specific cache directory
 .gradle
 
+# shangs git ignore cause the doofus using intellij
+.idea
+# he also needs to remove the leaderboard he has locally stored
+brownieLeaderboard.txt
+
 # Ignore Gradle build output directory
 build

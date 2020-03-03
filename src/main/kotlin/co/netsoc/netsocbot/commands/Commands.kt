@@ -15,6 +15,7 @@ internal fun register(command: String, helpString: String, action: (Message)->St
 fun init(): HashMap<String, (Message)->String?> {
     register("help", "Display this message", ::help)
     register("ping", "Responds with a \"pong!\"", ::ping)
+    register("brownie", "Awards brownie points to the yser mentioned", ::brownie)
 
     specialRegister("register", "Register as a UCC student for access to the server", ::register)
     
