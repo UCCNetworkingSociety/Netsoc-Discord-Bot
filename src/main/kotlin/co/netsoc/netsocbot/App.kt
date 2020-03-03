@@ -16,7 +16,7 @@ val ROLEIDS = (System.getenv("NETSOCBOT_ROLEIDS") ?: "").split(",")
 
 
 suspend fun setup() {
-    val environmentVariables = arrayOf("NETSOCBOT_TOKEN")
+    val environmentVariables = arrayOf("NETSOCBOT_TOKEN", "NETSOCBOT_ROLEIDS", "NETSOCBOT_SENDGRID_TOKEN")
     for (variable in environmentVariables) {
         println(variable)
         if (System.getenv(variable) == null) {
