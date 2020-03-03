@@ -26,7 +26,7 @@ suspend fun setup() {
     }
     var fileObject = File("brownieLeaderboard.txt")
     if (!fileObject.exists()){
-        println("NO FILEEEEEEEE")
+        println("No leaderboard file")
         fileObject.createNewFile()
     }
 
